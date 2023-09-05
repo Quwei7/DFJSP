@@ -42,46 +42,46 @@ class FJSP(): #! initialization 并未用到全局选择和局部选择 反而 �
 	# 			machine_time1[0,i]=n_time[index1[0]]
 	# 	return np.array([work]),machine1,machine_time1
 	
-	def caculate(self,job,machine,machine_time):
-		jobtime=np.zeros((1,self.job_num))        
-		tmm=np.zeros((1,self.machine_num))   			
-		tmmw=np.zeros((1,self.machine_num))			
-		startime=0
-		list_M,list_S,list_W=[],[],[]
-		count=np.zeros((1,self.job_num),dtype=np.int)
-		for i in range(job.shape[1]):
-			svg=int(job[0,i])
-			sig=int(machine[0,i])-1
+	# def caculate(self,job,machine,machine_time):
+	# 	jobtime=np.zeros((1,self.job_num))        
+	# 	tmm=np.zeros((1,self.machine_num))   			
+	# 	tmmw=np.zeros((1,self.machine_num))			
+	# 	startime=0
+	# 	list_M,list_S,list_W=[],[],[]
+	# 	count=np.zeros((1,self.job_num),dtype=np.int)
+	# 	for i in range(job.shape[1]):
+	# 		svg=int(job[0,i])
+	# 		sig=int(machine[0,i])-1
 
-			startime=max(jobtime[0,svg],tmm[0,sig])   	
-			tmm[0,sig]=startime+machine_time[0,i]
-			jobtime[0,svg]=startime+machine_time[0,i]
+	# 		startime=max(jobtime[0,svg],tmm[0,sig])   	
+	# 		tmm[0,sig]=startime+machine_time[0,i]
+	# 		jobtime[0,svg]=startime+machine_time[0,i]
 	
-			# list_M.append(sig+1)
-			list_S.append(startime)
-			list_W.append(machine_time[0,i])
-			count[0,svg]+=1
+	# 		# list_M.append(sig+1)
+	# 		list_S.append(startime)
+	# 		list_W.append(machine_time[0,i])
+	# 		count[0,svg]+=1
 				       
-		tmax=np.argmax(tmm[0])+1		#结束最晚的机器
-		C_finish=max(tmm[0])			#最晚完工时间
-		return C_finish,list_S,list_W,tmax
+	# 	tmax=np.argmax(tmm[0])+1		#结束最晚的机器
+	# 	C_finish=max(tmm[0])			#最晚完工时间
+	# 	return C_finish,list_S,list_W,tmax
 	
-	def draw(self,job,C_finish,list_M,list_S,list_W,tmax,signal,error_M,error_S,error_T):#画图   
-		figure,ax=plt.subplots()
-		count=np.zeros((1,self.job_num))
-		for i in range(job.shape[1]):  #每一道工序画一个小框
-			count[0,int(job[0,i])-1]+=1
-			plt.bar(x=list_S[i], bottom=list_M[i], height=0.5, width=list_W[i], orientation="horizontal",color='white',edgecolor='black')
-			plt.text(list_S[i]+list_W[i]/32,list_M[i], '%.0f' % (job[0,i]+1),color='black',fontsize=10,weight='bold')#12是矩形框里字体的大小，可修改
-		plt.plot([C_finish,C_finish],[0,tmax],c='black',linestyle='-.',label='完工时间=%.1f'% (C_finish))#用虚线画出最晚完工时间
+	# def draw(self,job,C_finish,list_M,list_S,list_W,tmax,signal,error_M,error_S,error_T):#画图   
+	# 	figure,ax=plt.subplots()
+	# 	count=np.zeros((1,self.job_num))
+	# 	for i in range(job.shape[1]):  #每一道工序画一个小框
+	# 		count[0,int(job[0,i])-1]+=1
+	# 		plt.bar(x=list_S[i], bottom=list_M[i], height=0.5, width=list_W[i], orientation="horizontal",color='white',edgecolor='black')
+	# 		plt.text(list_S[i]+list_W[i]/32,list_M[i], '%.0f' % (job[0,i]+1),color='black',fontsize=10,weight='bold')#12是矩形框里字体的大小，可修改
+	# 	plt.plot([C_finish,C_finish],[0,tmax],c='black',linestyle='-.',label='完工时间=%.1f'% (C_finish))#用虚线画出最晚完工时间
 		
-		font1={'weight':'bold','size':22}#汉字字体大小，可以修改
-		plt.xlabel("加工时间",font1)
-		plt.title("甘特图",font1)
-		plt.ylabel("机器",font1)
-		if(signal>0):
-			plt.plot([error_S,error_S],[0,self.machine_num+1],c='black',linestyle='--',label='故障开始时间=%.1f'% (error_S))
-			plt.plot([error_S+error_T,error_S+error_T],[0,error_M],c='black',linestyle=':',label='故障结束时间=%.1f'% (error_S+error_T))
+	# 	font1={'weight':'bold','size':22}#汉字字体大小，可以修改
+	# 	plt.xlabel("加工时间",font1)
+	# 	plt.title("甘特图",font1)
+	# 	plt.ylabel("机器",font1)
+	# 	if(signal>0):
+	# 		plt.plot([error_S,error_S],[0,self.machine_num+1],c='black',linestyle='--',label='故障开始时间=%.1f'% (error_S))
+	# 		plt.plot([error_S+error_T,error_S+error_T],[0,error_M],c='black',linestyle=':',label='故障结束时间=%.1f'% (error_S+error_T))
 
 	# 	scale_ls,index_ls=self.axis()
 	# 	plt.yticks(index_ls,scale_ls)
@@ -97,28 +97,28 @@ class FJSP(): #! initialization 并未用到全局选择和局部选择 反而 �
 
 
 
-	def caculate1(self,job,machine,machine_time,error_M,error_S,error_T):
-		jobtime=np.zeros((1,self.job_num))      #上一个工序的结束时间
-		tmm=np.zeros((1,self.machine_num))   	#tmm机器可使用的最早时间		
-		# tmmw=np.zeros((1,self.machine_num))			
-		startime=0
-		list_M,list_S,list_W=[],[],[]
-		count=np.zeros((1,self.job_num),dtype=np.int)
-		for i in range(job.shape[1]):#遍历工序单（基因）
-			svg=int(job[0,i])
-			sig=int(machine[0,i])-1
+	# def caculate1(self,job,machine,machine_time,error_M,error_S,error_T):
+	# 	jobtime=np.zeros((1,self.job_num))      #上一个工序的结束时间
+	# 	tmm=np.zeros((1,self.machine_num))   	#tmm机器可使用的最早时间		
+	# 	# tmmw=np.zeros((1,self.machine_num))			
+	# 	startime=0
+	# 	list_M,list_S,list_W=[],[],[]
+	# 	count=np.zeros((1,self.job_num),dtype=np.int)
+	# 	for i in range(job.shape[1]):#遍历工序单（基因）
+	# 		svg=int(job[0,i])
+	# 		sig=int(machine[0,i])-1
 
-			startime=max(jobtime[0,svg],tmm[0,sig])
-			if(startime<error_S)and(startime+machine_time[0,i]>error_S)and(error_M==sig+1):#出故障的机器、和对应正在进行的工序的位置
-				startime=error_S+error_T   #处理时间变长
-			tmm[0,sig]=startime+machine_time[0,i]
-			jobtime[0,svg]=startime+machine_time[0,i]
+	# 		startime=max(jobtime[0,svg],tmm[0,sig])
+	# 		if(startime<error_S)and(startime+machine_time[0,i]>error_S)and(error_M==sig+1):#出故障的机器、和对应正在进行的工序的位置
+	# 			startime=error_S+error_T   #处理时间变长
+	# 		tmm[0,sig]=startime+machine_time[0,i]
+	# 		jobtime[0,svg]=startime+machine_time[0,i]
 			
-			list_M.append(sig+1)
-			list_S.append(startime)
-			list_W.append(machine_time[0,i])
-			count[0,svg]+=1
+	# 		list_M.append(sig+1)
+	# 		list_S.append(startime)
+	# 		list_W.append(machine_time[0,i])
+	# 		count[0,svg]+=1
 				       
-		tmax=np.argmax(tmm[0])+1		#结束最晚的机器
-		C_finish=max(tmm[0])			#最晚完工时间
-		return C_finish,list_M,list_S,list_W,tmax
+	# 	tmax=np.argmax(tmm[0])+1		#结束最晚的机器
+	# 	C_finish=max(tmm[0])			#最晚完工时间
+	# 	return C_finish,list_M,list_S,list_W,tmax

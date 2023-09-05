@@ -1,5 +1,4 @@
 import numpy as np
-from fjsp import FJSP
 from data_solve import data_deal
 import matplotlib.pyplot as plt 
 from ga import GA
@@ -17,8 +16,6 @@ Tmachine,Tmachinetime,tdx,work,tom,machines=oj.cacu()#Tmachine 把M01中的机�
 parm_data=[Tmachine,Tmachinetime,tdx,work,tom,machines]
 # to=FJSP(job_num,machine_num,parm_data)#仿真环境
 ##############GA生成结果##################
-# init=GA(20,10,to,0.8,0.2,parm_data,machine_num) 
-# job,machine,machine_time = init.ga_total(...)
 #############插入新工件（生成新的模块信息）###########
 #6 2 3 4 6 2 1 1 2 3 3 4 2 6 6 6 1 2 6 3 6 5 2 6 1 1 2 1 3 4 2
 #new_operation = {arrive_time:[num_工序，[Tmachine],[Tmachinetime],tdx,tom]}

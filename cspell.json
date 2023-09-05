@@ -3,6 +3,27 @@
        "draw_Gantt",
        "caculate1",
        "make_span",
+       "FJSP",
+       "gantt",
+       "showarrow",
+       "iterrows",
+       "caculate",
+       "caculate1",
+       "jobb",
+       "jobtime",
+       "startime",
+       "Tmachinetime",
+       "dtype",
+       "chrom",
+       "hstack",
+       "vstack",
+       "argmin",
+       "Tmachine",
+       "popsize",
+       "plotly",
+       "matplotlib",
+       "pylab",
+       "pyplot"
        
     ]
 }

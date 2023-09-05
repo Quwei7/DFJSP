@@ -6,13 +6,13 @@ from datetime import datetime, timedelta
 from data_solve import data_deal
 import random 
 # from fjsp import FJSP
-import matplotlib.pyplot as plt 
+# import matplotlib.pyplot as plt 
 #plt.rcParams['font.sans-serif'] = ['STSong'] 
-from matplotlib.pylab import mpl
+# from matplotlib.pylab import mpl
 import itertools
 from collections import Counter
 import copy
-mpl.rcParams['font.sans-serif'] = ['SimHei']  # 添加这条可以让图形显示中文
+# mpl.rcParams['font.sans-serif'] = ['SimHei']  # 添加这条可以让图形显示中文
 
 
 class GA():
@@ -65,34 +65,26 @@ class GA():
             list_load = [0]*self.machine_num#
             for g in GJ_list:  # 随机选择工件集的第一个工件,从工件集中剔除这个工件 #对应工件编号
                 for j in range(self.machines[g]):# 从工件的第一个工序开始选择机器
-                    # print('g={},f={}'.format(g,j))
                     highs = self.tom[g][j]
                     if j == 0:
                         lows = 0
                     else:
                         lows = self.tom[g][j]-self.tdx[g][j]
-                # 					highs=self.tom[signal][count[signal,0]]
-                    # print(self.Tmachine)
-                    # print('g={},j={}'.format(g,j))
-                    # print('fff',self.Tmachine[g][lows:highs])
+ 
                     machine_feasible =[i-1 for i in self.Tmachine[g][lows:highs]]#可选的机器index
 
-                    # print('fff',machine_feasible)
-                    # print(machine_feasible)
+
                     corr_time = self.Tmachinetime[g][lows:highs]
-                    # print('machine_feasible=',machine_feasible)
-                    # print('corr=',corr_time)
+
                     index = np.argmin([list_load[i]+j for i,j in zip(machine_feasible,corr_time)])#对应的负荷处理时间最小的那台机器
                     index1 = machine_feasible[index]#对应的负荷处理时间最小的那台机器 
                     list_load[index1] += corr_time[index]
                     index2 = sum(self.machines[:g])+j 
-                    # print(len(MS[i]))
-                    # print('fff',index2)
+
                     MS[i][index2] = index
 
         CHS1 = np.hstack((MS, OS))
-        # print(CHS1)
-        # print(len(CHS1))
+
         return CHS1
     
     def Local_initial(self):
@@ -145,8 +137,7 @@ class GA():
     
     def decode(self,chrom):
         l = len(chrom)
-        # print(chrom)
-        # print(type(chrom))
+
         MS, OS = chrom[:int(l/2)], chrom[int(l/2):]
         count = [-1]*self.job_num
         # print(self.job_num)
@@ -161,20 +152,6 @@ class GA():
             M_list.append(self.Tmachine[i][low+MS[index]])
             T_list.append(self.Tmachine[i][low+MS[index]])
         return np.array(OS), np.array(M_list), np.array(T_list)
-
-
-        #适应度
-    # def fitness(self,CHS,J,Processing_time,M_num,Len):
-    #     Fit1=[]
-    #     for i in range(len(CHS)):
-    #         d = self.decode(CHS)
-    #         Fit1.append(d.Decode_1(CHS[i],Len))
-    #     # Fit2 = []
-    #     # for i in range(len(CHS)):
-    #     #     d = Decode(J, Processing_time, M_num)
-    #     #     Fit2.append(d.Decode_2(CHS[i], Len))
-
-    #     return Fit1 #,Fit2
 
 
         #机器部分交叉
@@ -339,8 +316,7 @@ class GA():
     
     def caculate(self,job,machine,machine_time):
         jobtime = [0]*self.job_num    #上一个工序的结束时间
-        tmm=[0]*self.machine_num     	#tmm机器可使用的最早时间					
-        # tmmw=np.zeros((1,self.machine_num))			
+        tmm=[0]*self.machine_num     	#tmm机器可使用的最早时间							
         startime=0
         list_S,list_W=[],[]
         for i in range(len(job)):
@@ -375,7 +351,7 @@ class GA():
         return C_finish,list_S,list_W
     
     def ga_initial(self):
-        answer=[] #种群中每个sol的makespan
+        answer=[] #种群中每个sol的make_span
         result=[] #最优的个体完成时间
         CHS = np.zeros((self.popsize,2*len(self.work)),dtype = int)
         work_job1,work_job=np.zeros((self.popsize,len(self.work)),dtype = int),np.zeros((self.popsize,len(self.work)),dtype = int)
@@ -407,13 +383,13 @@ class GA():
                     M2,T2=self.Mutation_Machine(W2,M2,T2)
                     W1 = self.Mutation_Operation(W1,M1,T1)
                     W2 = self.Mutation_Operation(W2,M2,T2)
-                # print('before',work_job3[i])
+
                 C_finish,_,_=self.caculate(W1,M1,T1)
                 work_job3[i]=W1 #更新工序编码
                 answer1.append(C_finish)
                 work_M3[i]=M1
                 work_T3[i]=T1
-                # print('after',work_job3[i])
+
                 C_finish,_,_=self.caculate(W2,M2,T2)
                 work_job3[i+1]=W2  #更新工序编码
                 answer1.append(C_finish)
@@ -427,7 +403,6 @@ class GA():
             answer=np.array(answer2)[best_idx].tolist()
             best_index=answer2.index(min(answer2))             #找到最小完工时间的个体
         
-            # print('遗传算法第%.0f次迭代的完工时间:%.0f'%(gen+1,min(answer2)))
             result.append([gen+1,min(answer2)])#记录每一次迭代的最优个体
         return work_job2[best_index],work_M2[best_index],work_T2[best_index],result 
     
@@ -441,22 +416,15 @@ class GA():
         df['end_time'] = base_datetime + pd.to_timedelta(df['end_time'], unit='H')
         # print(df)
         df.to_excel('example.xlsx', index=False)
-        # df['start_time'] = df['start_time'].apply(lambda hours: base_datetime + timedelta(hours=hours))
-        # # 格式化日期时间为字符串格式
-        # df['start_time'] = df['start_time'].df.strftime('%Y-%m-%d,%H:%M:%S')
-        # for i in range(len(df)):
-        #     df['start_time'].loc[i] = base_datetime + pd.Timedelta(hours = df['start_time'].loc[i])
 
         vertical_lines = copy.deepcopy(arrive_time)
         for i in range(len(arrive_time)):
             vertical_lines[i] = base_datetime + timedelta(hours=vertical_lines[i])
             vertical_lines[i] = vertical_lines[i].strftime('%Y-%m-%d %H:%M:%S')
-        # print(vertical_lines)
+
 
         end_range = (base_datetime + timedelta(hours=end_range)).strftime('%Y-%m-%d %H:%M:%S')
         vertical_lines.append(end_range)
-
-        # print(end_range)
             
 
         # generate Gantt chart
@@ -487,19 +455,17 @@ class GA():
                 showarrow=False,
                 font=dict(size=8)
             )
-        # fig.update_yaxes(range=[0, 9])
-        # fig.update_xaxes(range=[initial_time, '2023-09-04 08:00:00'])
-        # 显示图表
         
         fig.show()
         fig.write_html("gantt_chart1.html")
+        # fig.write_image("gantt_chart1.jpg")
 
 
 
             
     ################有新车加入时怎么计算#######################
     def ga_total(self,new_car,initial_time="2023-09-01 08:00:00"):
-        #newcar[[...]] arrive time[] len(new_car) = len(arrive_time)
+        #new_car[[...]] arrive time[] len(new_car) = len(arrive_time)
         # task:machine type, start_time,finish_time,resource:job
         data_list=[]
         job, machine, machine_time, _ = self.ga_initial()#得到的初始结果
@@ -520,17 +486,13 @@ class GA():
             else:
                 data_list += [(machine[i],list_S[i]+arrive_time[k-1],list_S[i]+list_W[i]+arrive_time[k-1],job[i]) for i in finish]
     
-            # truncation = index[-1][0]
 
-            # error_S = 0
             error_M_T = {}
             for i in range(len(index)):
                 error_M_T.update({(machine[index[i][0]],job[index[i][0]]):index[i][1]}) #故障机器,正在进行中的工件:#剩余时间（故障时间）
-            # job1 = job[truncation+1:]
-            # job2 = job[:truncation+1]
+
              ######FJSP的充分完备信息更新
-            # counter = dict(Counter(job1))
-            # counter = dict(sorted(counter.items(), key=lambda v:v[0]))
+
             finish = [job[i] for i in finish]
             counter1 = dict(Counter(job))
             counter1 = dict(sorted(counter1.items(), key=lambda v:v[0]))
@@ -545,29 +507,26 @@ class GA():
             tdx = copy.deepcopy(self.tdx)
             tom = copy.deepcopy(self.tom)
             
-            # # print(self.tdx)
-            # print('initial',self.Tmachine)
+
             for key,value in counter.items(): #key:工件，value:剩余工序数，如果已经完成则不在考虑之中{1:4,3:5...}
-                # print('k={},v={}'.format(key,value))
+
                 ind = self.machines[key]-value #已经完成的工件则不会更新，也不会用到
-                # print('index',ind)
-                # print('machine',self.machines)
+
                 work += [key]*value
                 machines[key] = value
                 tdx[key] = self.tdx[key][ind:]
-                # print('ffff',self.tdx[key][ind:])
+
                 if ind!=0:
                     tom[key] = [i-self.tom[key][ind-1] for i in self.tom[key][ind:]]
                     Tmachine[key] = self.Tmachine[key][self.tom[key][ind-1]:]
                     Tmachinetime[key] = self.Tmachinetime[key][self.tom[key][ind-1]:]
-            # print('b={},tdx={}'.format(self.tdx,tdx))
-            # print('tom',tom)
+
             car = copy.deepcopy(new_car[arrive_time[k]])
             self.job_list.append(self.job_num)  
             num = [self.job_num]*car[0]
             work += num
             self.job_num += 1
-            # print(work)
+
             Tmachine.append(car[1])
             Tmachinetime.append(car[2])
             machines.append(car[0])
@@ -587,17 +546,15 @@ class GA():
     ###########更新Tmachine,Tmachinetime,tdx,work,tom,machines###################
                    ####计算得到哪几个机器现在还不能用（机器故障）#####
             #######error_S = 0; error_M+error_T(index可算出)################
-            # print('tailored=',self.Tmachine)
-            answer=[] #种群中每个sol的makespan
+
+            answer=[] #种群中每个sol的make_span
             result=[] #最优的个体完成时间
             #每次生成的结果包含工序单、机器单、处理时间单
             #work_job1初始化空值 work_job亲代  work_job3 子代
             work_job1,work_job=np.zeros((self.popsize,len(self.work)),dtype = int),np.zeros((self.popsize,len(self.work)),dtype = int)
             work_M1,work_M=np.zeros((self.popsize,len(self.work)),dtype = int),np.zeros((self.popsize,len(self.work)),dtype = int)
             work_T1,work_T=np.zeros((self.popsize,len(self.work))),np.zeros((self.popsize,len(self.work)))
-            #list_M,list_S,list_W调度的机器，开工时间、工序加工时间的安排(对应job_operation列表)
-            # C_finish,list_M,list_S,list_W,_=self.to.caculate(self.w,self.m,self.t)
-            # index=self.find_index(list_M,list_S,list_W,error_M,error_S,error_T) #找到最晚还在加工的编码的位置
+
             print('eeroe',error_M_T)
             for gen in range(self.generation):
                 print('gen_new=',gen)
@@ -605,31 +562,24 @@ class GA():
                     for i in range(self.popsize):
                         # print('num',i)
                         job, machine, machine_time, _ = self.ga_initial()
-                        # print('job',type(job))
-                        # print('fff',machine)
-                        # print('ggg',machine_time)
-                        # print('ggg',error_M_T)
+
                         C_finish,list_S,_=self.caculate1(job,machine,machine_time,error_M_T) #出现故障后计算得到的完成时间
                         answer.append(C_finish)
                         work_job[i]=(job)
                         work_M[i]=machine
                         work_T[i]=machine_time
                     result.append([gen,min(answer)])#记录初始解的最小完工时间
-                    # print('work_job',work_job)
-                    # print('work_M',work_M)
+
 
                 answer1=[]
-                # print('work_job',work_job)
-                # print('work_M',work_M)
+
                 work_jobb,work_MM,work_TT=np.copy(work_job),np.copy(work_M),np.copy(work_T) #拷贝更新的结果
                 work_job3,work_M3,work_T3=np.copy(work_job1),np.copy(work_M1),np.copy(work_T1)
                 for i in range(0,self.popsize,2):#相邻两个亲代结合
                     print('individual=',i)
                     W1,M1,T1=work_jobb[i],work_MM[i],work_TT[i] #亲代1
                     W2,M2,T2=work_jobb[i+1],work_MM[i+1],work_TT[i+1]#亲代2
-                    # print('counter',counter)
-                    # W = dict(Counter(W1)) 
-                    # print('check1',dict(sorted(W.items(), key=lambda v:v[0])))
+
                     if np.random.rand()<self.p1:
                         W1,W2 = self.Crossover_Operation(W1,W2)
                         M1,M2 = self.Crossover_Machine(M1,M2)
@@ -651,11 +601,11 @@ class GA():
                     answer1.append(C_finish)
                     work_M3[i+1]=M2
                     work_T3[i+1]=T2
-                # print(work_M2) 
+
                 work_job2,work_M2,work_T2=np.vstack((work_job,work_job3)),np.vstack((work_M,work_M3)),np.vstack((work_T,work_T3))
                 _, first_indices= np.unique(np.hstack((work_job2,work_M2)), axis = 0,return_index = True)
                 work_job2, work_M2, work_T2 = work_job2[first_indices], work_M2[first_indices], work_T2[first_indices]
-                # print(work_job2,)
+
                 answer2=answer+answer1#亲代子代结合比较
                 answer2 = np.array(answer2)[first_indices].tolist()
                 best_idx=np.array(answer2).argsort()[0:self.popsize] #前self.popsize个最好的个体，并将其作为下一次的亲代
@@ -666,27 +616,12 @@ class GA():
 
                 result.append([gen+1,min(answer2)])#记录每一次迭代的最优个体
             job, machine, machine_time= work_job2[best_index],work_M2[best_index],work_T2[best_index]
-            makespan,list_S,list_W=self.caculate1(job,machine,machine_time,error_M_T)
-            # print(job,machine)
-        # _,list_S,list_W=self.caculate1(job,machine,machine_time,error_M_T)
-        # print(job)
-        # print('machine',machine)
-        # print('machine_time',machine_time)
-        # print('list_S',list_S)
-        end_range = float(makespan + arrive_time[-1])
-        # print(end_range)
-        # end_range =  pd.Timestamp(initial_time) + timedelta(hours=tmax)
-        # end_range = end_range.strftime('%Y-%m-%d %H:%M:%S')
-        # print('arrive_time[-1]',arrive_time[-1])
-        # print(data_list)
-        # print('new',[(machine[i],list_S[i]+arrive_time[-1],list_S[i]+list_W[i]+arrive_time[-1],job[i]) for i in range(len(job))])
+            make_span,list_S,list_W=self.caculate1(job,machine,machine_time,error_M_T)
+
+        end_range = float(make_span + arrive_time[-1])
         data_list += [(machine[i],list_S[i]+arrive_time[-1],list_S[i]+list_W[i]+arrive_time[-1],job[i]) for i in range(len(job))]
         # print(data_list)
         self.draw_Gantt(data_list, arrive_time,initial_time,end_range)
-            
-
-        # piece_result = arrive_time[-1]+result[-1][1]
-        # return work_job2[best_index],work_M2[best_index],work_T2[best_index],piece_result
 
         
 
